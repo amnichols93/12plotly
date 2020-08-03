@@ -14,6 +14,7 @@ function init() {
     
     buildMetadata('940');
     buildGauge('940');
+    buildBar('940');
 }
 
 init();
@@ -21,6 +22,7 @@ init();
 function optionChanged(newSample) {
     buildMetadata(newSample);
     buildGauge(newSample);
+    buildBar(newSample);
 }
 
 function buildMetadata(sample) {
@@ -80,8 +82,34 @@ function buildGauge(sample) {
 }
 
 
+function buildBar(sample) {
+    d3.json("samples.json").then((data) => {
+        let sample_set = data.samples[sample];
+        let sorted_values = sample_set.sample_values.sort((a,b) => b - a);
+        let topTenValues = sorted_values.slice(0,10);
+        let topTenIDs = sample_set.otu_ids.slice(0,10);
+        console.log(topTenValues);
+        console.log(topTenIDs);
+
+        var data = [{
+            x: topTenIDs,
+            y: topTenValues,
+            type: "bar",
+            orientation: 'h'
+        }];
+        var layout = {
+            title: "'Bar' Chart",
+            xaxis: { title: "OTU Values"},
+            yaxis: { title: "OTU IDs"}
+        };
+        Plotly.newPlot('bar', data, layout);
+    });
+}
+
+
+
 /*Create a bar chart of the top ten bacterial species in a volunteer’s navel. 
-    Use JavaScript to select only the most populous species.*/
+Use JavaScript to select only the most populous species.*/
     /*d3.json("samples.json").then((data) => {
         var metadata = data.metadata;
         var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
