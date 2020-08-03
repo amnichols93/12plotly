@@ -15,6 +15,7 @@ function init() {
     buildMetadata('940');
     buildGauge('940');
     buildBar('940');
+    buildBubble('940')
 }
 
 init();
@@ -23,6 +24,7 @@ function optionChanged(newSample) {
     buildMetadata(newSample);
     buildGauge(newSample);
     buildBar(newSample);
+    buildBubble(newSample);
 }
 
 function buildMetadata(sample) {
@@ -47,19 +49,25 @@ function buildBar(sample) {
     d3.json("samples.json").then((data) => {
         let sample_set = data.samples;
         let filtered_set = sample_set.filter(sampleObj => sampleObj.id == sample);
+
         let values_set = filtered_set[0].sample_values;
         let sorted_values = values_set.sort((a,b) => a - b);
         let topTenValues = sorted_values.slice(-10);
+
         let names_set = filtered_set[0].otu_ids;
         let topTenIDs = names_set.slice(-10);
         let IDnames = []
         topTenIDs.forEach(element => IDnames.push("OTU ID " + element));
 
+        let labels_set = filtered_set[0].otu_labels;
+        let topTenLabels = labels_set.slice(-10);
+
         var data = [{
             x: topTenValues,
             y: IDnames,
             type: "bar",
-            orientation: 'h'
+            orientation: 'h',
+            text: topTenLabels
         }];
         var layout = {
             xaxis: { title: "OTU Values"},
@@ -67,7 +75,48 @@ function buildBar(sample) {
         Plotly.newPlot('bar', data, layout);
     });
 }
-buildBar('947')
+
+function buildBubble(sample) {
+    d3.json("samples.json").then((data) => {
+        let sample_set = data.samples;
+        let filtered_set = sample_set.filter(sampleObj => sampleObj.id == sample);
+
+        let values_set = filtered_set[0].sample_values;
+        /*let sorted_values = values_set.sort((a,b) => a - b);
+        let topTenValues = sorted_values.slice(-10);*/
+
+        let id_set = filtered_set[0].otu_ids;
+        /*let topTenIDs = names_set.slice(-10);
+        let IDnames = []
+        topTenIDs.forEach(element => IDnames.push("OTU ID " + element));*/
+
+        let labels_set = filtered_set[0].otu_labels;
+        //let topTenLabels = labels_set.slice(-10);
+
+        let bubblesize = []
+        values_set.forEach(element => bubblesize.push(element * 0.75))
+
+        var data = [{
+            x: id_set,
+            y: values_set,
+            text: labels_set,
+            mode: 'markers',
+            marker: {
+              color: '#009688',
+              size: bubblesize,
+              opacity: 0.5
+            }
+        }];
+          
+        var layout = {
+            xaxis: { title: "OTU ID"},
+            showlegend: false,
+            height: 600,
+            width: 1500
+        };
+        Plotly.newPlot('bubble', data, layout);
+    });
+}
 
 function buildGauge(sample) {
     d3.json("samples.json").then((data) => {
@@ -80,7 +129,7 @@ function buildGauge(sample) {
             {
                 domain: { x: [0, 1], y: [0, 1] },
                 value: guagevalue,
-                title: { text: "Belly Button Washing" },
+                title: { text: "Belly Button Washing Frequency" },
                 type: "indicator",
                 mode: "gauge+number",
                 gauge: {
@@ -106,25 +155,3 @@ function buildGauge(sample) {
         Plotly.newPlot('gauge', gaugedata, layout);
     });
 }
-
-
-/*Create a bar chart of the top ten bacterial species in a volunteer’s navel. 
-Use JavaScript to select only the most populous species.*/
-    /*d3.json("samples.json").then((data) => {
-        var metadata = data.metadata;
-        var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
-        var result = resultArray[0];*/
-
-        /*d3.json("samples.json").then(function(data){
-            let samples = data.samples.filter(sampleObj => sampleObj.id == sample);
-            let sample_values = samples.sample_values;
-            let sorted_sample_values = sample_values.sort((a,b) => b - a);
-            let filtered_samples_values = sorted_sample_values;
-            let topTenValues = filtered_samples_values.slice(0,10);
-            console.log("Top 10: " + topTenValues);
-        });*/
-
-    /*});*/
-
-    /*Create a bubble chart to visualize the relative frequency of all the 
-    bacterial species found in a volunteer’s navel.*/
