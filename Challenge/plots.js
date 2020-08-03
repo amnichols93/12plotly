@@ -46,8 +46,8 @@ function buildMetadata(sample) {
 function buildBar(sample) {
     d3.json("samples.json").then((data) => {
         let sample_set = data.samples[sample];
-        let sample_values = sample_set.sample_values;
-        let sorted_values = sample_values.sort((a,b) => a - b);
+        let sample_values_set = sample_set.sample_values;
+        let sorted_values = sample_values_set.sort((a,b) => a - b);
         let topTenValues = sorted_values.slice(-10);
         let topTenIDs = sample_set.otu_ids.slice(-10);
         let IDnames = []
