@@ -43,6 +43,30 @@ function buildMetadata(sample) {
     });
 }
 
+function buildBar(sample) {
+    d3.json("samples.json").then((data) => {
+        let sample_set = data.samples[sample];
+        let sample_values = sample_set.sample_values;
+        let sorted_values = sample_values.sort((a,b) => a - b);
+        let topTenValues = sorted_values.slice(-10);
+        let topTenIDs = sample_set.otu_ids.slice(-10);
+        let IDnames = []
+        topTenIDs.forEach(element => IDnames.push("OTU ID " + element));
+
+        var data = [{
+            x: topTenValues,
+            y: IDnames,
+            type: "bar",
+            orientation: 'h'
+        }];
+        var layout = {
+            xaxis: { title: "OTU Values"},
+            yaxis: { title: "OTU IDs"}
+        };
+        Plotly.newPlot('bar', data, layout);
+    });
+}
+
 function buildGauge(sample) {
     d3.json("samples.json").then((data) => {
         var metadata = data.metadata;
@@ -80,32 +104,6 @@ function buildGauge(sample) {
         Plotly.newPlot('gauge', gaugedata, layout);
     });
 }
-
-
-function buildBar(sample) {
-    d3.json("samples.json").then((data) => {
-        let sample_set = data.samples[sample];
-        let sorted_values = sample_set.sample_values.sort((a,b) => b - a);
-        let topTenValues = sorted_values.slice(0,10);
-        let topTenIDs = sample_set.otu_ids.slice(0,10);
-        console.log(topTenValues);
-        console.log(topTenIDs);
-
-        var data = [{
-            x: topTenIDs,
-            y: topTenValues,
-            type: "bar",
-            orientation: 'h'
-        }];
-        var layout = {
-            title: "'Bar' Chart",
-            xaxis: { title: "OTU Values"},
-            yaxis: { title: "OTU IDs"}
-        };
-        Plotly.newPlot('bar', data, layout);
-    });
-}
-
 
 
 /*Create a bar chart of the top ten bacterial species in a volunteer’s navel. 
