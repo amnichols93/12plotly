@@ -41,26 +41,26 @@ function buildMetadata(sample) {
 }
 
 function buildCharts(sample) {
-    //Create a bar chart of the top ten bacterial species in a volunteer’s navel. 
-    //Use JavaScript to select only the most populous species.
-    //d3.json("samples.json").then((data) => {
-        //var metadata = data.metadata;
-        //var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
-        //var result = resultArray[0];
+    /*Create a bar chart of the top ten bacterial species in a volunteer’s navel. 
+    Use JavaScript to select only the most populous species.*/
+    /*d3.json("samples.json").then((data) => {
+        var metadata = data.metadata;
+        var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+        var result = resultArray[0];*/
 
-    d3.json("samples.json").then(function(data){
-        let samples = data.samples.filter(sampleObj => sampleObj.id == sample);
-        let sample_values = samples.sample_values;
-        let sorted_sample_values = sample_values.sort((a,b) => b - a);
-        let filtered_samples_values = sorted_sample_values;
-        let topTenValues = filtered_samples_values.slice(0,10);
-        console.log("Top 10: " + topTenValues);
-    });
+        /*d3.json("samples.json").then(function(data){
+            let samples = data.samples.filter(sampleObj => sampleObj.id == sample);
+            let sample_values = samples.sample_values;
+            let sorted_sample_values = sample_values.sort((a,b) => b - a);
+            let filtered_samples_values = sorted_sample_values;
+            let topTenValues = filtered_samples_values.slice(0,10);
+            console.log("Top 10: " + topTenValues);
+        });*/
 
-    //});
+    /*});*/
 
-    //Create a bubble chart to visualize the relative frequency of all the 
-    //bacterial species found in a volunteer’s navel.
+    /*Create a bubble chart to visualize the relative frequency of all the 
+    bacterial species found in a volunteer’s navel.*/
 
     //Gauge: DONE
     d3.json("samples.json").then((data) => {
